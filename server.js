@@ -1,35 +1,24 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const { ApolloServer } = require('apollo-server-express');
-const typeDefs = require('./graphql/schema'); // Define your GraphQL schema
-const resolvers = require('./graphql/resolvers'); // Define your GraphQL resolvers
+import { connect } from 'mongoose';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import typeDefs from './graphql/schema.js';
+import resolvers from './graphql/resolvers.js';
 
-const app = express();
 
-// Connect to your MongoDB database
-mongoose.connect('mongodb://localhost/backend_forms', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// const db = connect('mongodb://localhost/backend_forms', {
+
+// });
 
 // Set up GraphQL server
 const server = new ApolloServer({ typeDefs, resolvers });
 
 // Make sure to await server.start() before applying middleware
-async function startApolloServer() {
-  await server.start();
-  server.applyMiddleware({ app });
+async function startServer() {
+  const { url } = await startStandaloneServer(server, {
+    listen: {port: 4000},
+  });
+  console.info(`🚀 Server ready at ${url}`);
 }
 
-startApolloServer().then(() => {
-  // Start your Express app on a port of your choice
-  const port = process.env.PORT || 4000;
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
-});
-
-const routes = require('./routes');
-
-app.use('/', routes);
+startServer();
 
