@@ -19,13 +19,33 @@ const resolvers = {
 
       return user;
     },
-    deleteUser: async (_, args) => {
-      const result = await User.findOneAndDelete({ id: args.id });
+    deleteUser: async (_, {id}) => {
+      const result = await User.deleteOne({ id: id });
       if (result.acknowledged && result.deletedCount === 1) {
         return id;
-      } else {
-        throw new Error("User with this ID does not exist.");
-      }
+      } 
+      console.log(result);  
+      return null;
+
+    },
+    editUser: async (_, args) => {
+      const result = await User.updateOne(
+        { id: args.id },
+         {
+            $set: {
+              username: args.username,
+              name: args.name,
+              surname: args.surname,
+              country: args.country,
+              id: args.id,
+            },
+         }
+         );
+      if (result.acknowledged && result.modifiedCount === 1) {
+        return await User.findOne({ id: args.id });
+      } 
+      console.log(result);  
+      return null;
     }
   },
 };
