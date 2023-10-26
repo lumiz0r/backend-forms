@@ -19,6 +19,14 @@ const resolvers = {
 
       return user;
     },
+    deleteUser: async (_, args) => {
+      const result = await User.findOneAndDelete({ id: args.id });
+      if (result.acknowledged && result.deletedCount === 1) {
+        return id;
+      } else {
+        throw new Error("User with this ID does not exist.");
+      }
+    }
   },
 };
 
