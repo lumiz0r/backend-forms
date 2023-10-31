@@ -6,4 +6,4 @@ export const User = mongoose.model('User', {
   surname: String,
   country: String,
   id: String
-})
+})  

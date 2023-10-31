@@ -4,6 +4,10 @@ const resolvers = {
   Query: {
     hello: () => "Hello world!",
     getUsers: async () => await User.find({}),
+    loginUser: async (_, args) => {
+       const user = await User.findOne({ id: args.id })
+       return user;
+    }
   },
   Mutation: {
     createUser: async (_, args) => {

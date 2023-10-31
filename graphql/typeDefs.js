@@ -4,6 +4,7 @@ const typeDefs = gql`
   type Query {
     hello: String
     getUsers: [User]
+    loginUser(id: String): User
   }
 
   type User {
